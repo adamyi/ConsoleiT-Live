@@ -154,7 +154,7 @@
     var nationL = document.getElementById('nations').value.split("\n");
     var presentL = document.getElementById('present').value.split("\n");
     var msg = "";
-    for (var i = 0 ; i < min(presentL.length, nationL.length) ; i++)
+    for (var i = 0 ; i < Math.min(presentL.length, nationL.length) ; i++)
     {
       msg += nationL[i];
       if (presentL[i] == "p")
@@ -164,7 +164,7 @@
       else
         msg += "\n";
     }
-    for (var i = min(presentL.length, nationL.length) ; i < nationL.length ; i++)
+    for (var i = Math.min(presentL.length, nationL.length) ; i < nationL.length ; i++)
     {
       msg += nationL[i] + "\n";
     }
