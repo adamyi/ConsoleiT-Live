@@ -476,7 +476,14 @@ h1, h2, h3, h4, h5, h6 {
 	  document.getElementById('timer1').innerHTML = arg;
 	})
 	ipc.on('timer2Update', function (event, arg) {
-	  document.getElementById('timer2').innerHTML = arg;
+		if (parseInt(arg / 60) < 10)
+			document.getElementById('timer2').innerHTML = "0";
+		else
+			document.getElementById('timer2').innerHTML = "";
+	  document.getElementById('timer2').innerHTML += "" + parseInt(arg / 60) + ":";
+		if (parseInt(arg % 60) < 10)
+			document.getElementById('timer2').innerHTML += "0";
+	  document.getElementById('timer2').innerHTML += "" + parseInt(arg % 60);
 	})
 	ipc.on('showOverlay', function (event, arg) {
 		if (timerT != -1) {
