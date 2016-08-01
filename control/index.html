@@ -6,7 +6,7 @@
   <link href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="container" style="display: flex; flex-flow: column;">
+  <div class="container" style="display: flex; flex-flow: column; padding-right: 0px; padding-left: 0px;">
     <div class="row">
   <div class="col-sm-3">
     Lower-third Position: <input type="text" id="ltPosition" value="-350"><br>
@@ -26,16 +26,17 @@
     Timer 2 RESET: <input type="checkbox" id="t2reset"><br-->
     Timer 1 Default: <input type="text" id="t1default" value="60"><br>
     Timer 2 Default: <input type="text" id="t2default" value="600"><br>
-    <button id="updateData">Update</button>
     <button id="startTimer">Start</button>
     <button id="pauseTimer">Pause</button>
     <button id="resetTimer">Reset</button>
+    <button id="nextTimer">Next</button>
+    <button id="updateData">Update</button>
   </div>
   <div class="col-sm-3">
     Nations|Present Status<br>
     <textarea rows="20" cols="20" id="nations" style="text-align: right;"></textarea>
     <textarea rows="20" cols="1" id="present"></textarea>
-    <button id="updateNations">Update</button>
+    <!--button id="updateNations">Update</button-->
   </div>
   <div class="col-sm-3">
     Speakers' List<br>
@@ -115,6 +116,11 @@
   {
     ipc.send('setTimer1', document.getElementById('t1default').value);
     ipc.send('setTimer2', document.getElementById('t2default').value);
+  }
+  function nextTimer()
+  {
+    pauseTimer();
+    ipc.send('setTimer1', document.getElementById('t1default').value);
   }
   function updateT1(str)
   {
@@ -219,22 +225,24 @@
     //}
   }
   var updateButton = document.getElementById('updateData');
-  var nationsButton = document.getElementById('updateNations');
+  //var nationsButton = document.getElementById('updateNations');
   var nextButton = document.getElementById('nextSpeaker');
   var startButton = document.getElementById('startTimer');
   var pauseButton = document.getElementById('pauseTimer');
   var resetButton = document.getElementById('resetTimer');
+  var nextTimerButton = document.getElementById('nextTimer');
   var overlayTextArea = document.getElementById('overlayText');
   var presentTextArea = document.getElementById('present');
   var speakerTextArea = document.getElementById('speakList');
   var showButton = document.getElementById('showOverlay');
   var dismissButton = document.getElementById('dismissOverlay');
   updateButton.addEventListener('click', updateData);
-  nationsButton.addEventListener('click', updateNations);
+  //nationsButton.addEventListener('click', updateNations);
   nextButton.addEventListener('click', nextSpeaker);
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
+  nextTimerButton.addEventListener('click', nextTimer);
   overlayTextArea.addEventListener('keyup', updateOverlay);
   presentTextArea.addEventListener('keyup', updateOverlayPresent);
   speakerTextArea.addEventListener('keyup', updateOverlaySpeaker);
