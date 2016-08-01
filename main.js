@@ -132,8 +132,8 @@ function createWindowPresent() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindowControl();
   createWindowPresent();
+  createWindowControl();
   winPresent.webContents.on('did-finish-load', () => {
     //winPresent.webContents.send('setText', 'test');
   });
