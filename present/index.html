@@ -55,6 +55,7 @@
 </html-->
 <html>
 <head>
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 	<link rel="stylesheet" href="../css/pure-min.css">
 	<style class="cp-pen-styles">
 
@@ -383,33 +384,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 </style>
-	<script src="../js/jquery-2.2.4.min.js"></script>
+	<script src="../js/jquery-3.1.0.min.js"></script>
 	<script src="../js/camera.js"></script>
-	<script>
-		var ipc = require('electron').ipcRenderer
-		ipc.on('setText', function (event, arg) {
-			//const message = `<h3><p align="center">${arg}</p></h3>`
-			document.getElementById('mainText').innerHTML = arg
-		})
-		ipc.on('setT1', function\ (event, arg) {
-			document.getElementById('st1').innerHTML = arg
-		})
-		ipc.on('setT2', function (event, arg) {
-			document.getElementById('st2').innerHTML = arg
-		})
-		ipc.on('setT3', function (event, arg) {
-			document.getElementById('st3').innerHTML = arg
-		})
-		ipc.on('setT4', function (event, arg) {
-			document.getElementById('st4').innerHTML = arg
-		})
-		ipc.on('setConference', function (event, arg) {
-			document.getElementById('conference').innerHTML = arg
-		})
-		ipc.on('setCommittee', function (event, arg) {
-			document.getElementById('committee').innerHTML = arg
-		})
-	</script>
 </head>
 <body>
 	<div id="container" width=100% height=100%>
@@ -468,6 +444,31 @@ h1, h2, h3, h4, h5, h6 {
 </body>
 <script>
 var ipc = require('electron').ipcRenderer;
+var timerT = -1;
+document.getElementById('overlayModal').style.display = 'none';
+
+	ipc.on('setText', function (event, arg) {
+		//const message = `<h3><p align="center">${arg}</p></h3>`
+		document.getElementById('mainText').innerHTML = arg
+	})
+	ipc.on('setT1', function (event, arg) {
+		document.getElementById('st1').innerHTML = arg
+	})
+	ipc.on('setT2', function (event, arg) {
+		document.getElementById('st2').innerHTML = arg
+	})
+	ipc.on('setT3', function (event, arg) {
+		document.getElementById('st3').innerHTML = arg
+	})
+	ipc.on('setT4', function (event, arg) {
+		document.getElementById('st4').innerHTML = arg
+	})
+	ipc.on('setConference', function (event, arg) {
+		document.getElementById('conference').innerHTML = arg
+	})
+	ipc.on('setCommittee', function (event, arg) {
+		document.getElementById('committee').innerHTML = arg
+	})
 ipc.on('timer1Update', function (event, arg) {
   document.getElementById('timer1').innerHTML = arg;
 })
@@ -476,13 +477,33 @@ ipc.on('timer2Update', function (event, arg) {
 })
 ipc.on('showOverlay', function (event, arg) {
 	if (arg) {
-  	document.getElementById('overlayModal').style.display = 'block';
+  	showOverlay();//document.getElementById('overlayModal').style.display = 'block';
 	}	else {
-		document.getElementById('overlayModal').style.display = 'none';
+		dismissOverlay();//document.getElementById('overlayModal').style.display = 'none';
 	}
 })
+function showOverlay()
+{
+	$("#overlayModal").fadeIn("normal", function(){
+		document.getElementById('overlayModal').style.display = 'block';
+	});
+}
+function dismissOverlay()
+{
+	$("#overlayModal").fadeOut("normal", function(){
+		document.getElementById('overlayModal').style.display = 'none';
+	});
+}
 ipc.on('setOverlay', function (event, arg) {
   document.getElementById('overlayModalText').innerHTML = arg.replace(/\n/g,'<br/>');
+	if (document.getElementById('overlayModal').style.display == 'none') {
+		showOverlay();
+	}
+	if (timerT != -1) {
+		clearTimeout(timerT);
+	}
+	timerT = setTimeout(dismissOverlay, 2500);
 })
 </script>
+<script>if (window.module) module = window.module;</script>
 </html>
