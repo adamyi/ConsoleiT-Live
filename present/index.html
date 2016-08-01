@@ -398,7 +398,7 @@ h1, h2, h3, h4, h5, h6 {
 			</tr>
 		</table>
 	</div>
-                <div class="overlay"><div class="chromakey">
+                <div class="overlay" id="lt"><div class="chromakey">
                     <div id="lower-third" class="pure-g">
 
                         <div class="section-1 pure-u-1">
@@ -468,6 +468,9 @@ h1, h2, h3, h4, h5, h6 {
 	})
 	ipc.on('setCommittee', function (event, arg) {
 		document.getElementById('committee').innerHTML = arg
+	})
+	ipc.on('setLTPosition', function (event, arg) {
+		document.getElementById('lt').style.marginTop = arg + "px";
 	})
 	ipc.on('timer1Update', function (event, arg) {
 	  document.getElementById('timer1').innerHTML = arg;

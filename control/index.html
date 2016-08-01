@@ -9,6 +9,7 @@
   <div class="container" style="display: flex; flex-flow: column;">
     <div class="row">
   <div class="col-sm-3">
+    Lower-third Position: <input type="text" id="ltPosition" value="-350"><br>
     Conference Name: <input type="text" id="conference" value="BJMUNSS2016"><br>
     Committee Name: <input type="text" id="committee" value="ICAO"><br>
     Current Speaker: <input type="text" id="speaker" value="Welcome"><br>
@@ -78,6 +79,7 @@
     ipc.send('setT4', document.getElementById('t4').value);
     ipc.send('setConference', document.getElementById('conference').value);
     ipc.send('setCommittee', document.getElementById('committee').value);
+    ipc.send('setLTPosition', document.getElementById('ltPosition').value);
   }
   function updateMT()
   {

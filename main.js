@@ -53,6 +53,9 @@ ipc.on('setConference', function (event, arg) {
 ipc.on('setCommittee', function (event, arg) {
   winPresent.webContents.send('setCommittee', arg);
 })
+ipc.on('setLTPosition', function (event, arg) {
+  winPresent.webContents.send('setLTPosition', arg);
+})
 ipc.on('showOverlay', function (event, arg) {
   winPresent.webContents.send('showOverlay', arg);
 })
