@@ -1,0 +1,194 @@
+/*===========================================================================
+    stylesheet by:
+    Leon Taveras (LeonimuZ) || http://about.me/lnz
+===========================================================================*/
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+// Greenblue
+$turquoise: #1abc9c;
+$green-sea: #16a085;
+// Green
+$emerald: #2ecc71;
+$nephritis: #27ae60;
+// Blue
+$peter-river: #3498db;
+$belize-hole: #2980b9;
+// Magenta
+$amethyst: #9b59b6;
+$wisteria: #8e44ad;
+// Dark Blue
+$wet-asphalt: #34495e;
+$midnight-blue: #2c3e50;
+// Yellow
+$sun-flower: #f1c40f;
+$orange: #f39c12;
+// Orange
+$carrot: #e67e22;
+$pumpkin: #d35400;
+// Red
+$alizarin: #e74c3c;
+$pomegranate: #c0392b;
+// White
+$clouds: #ecf0f1;
+$silver: #bdc3c7;
+$whitesmoke: #f0f0f0;
+// Grey
+$concrete: #95a5a6;
+$asbestos: #7f8c8d;
+$black: #111111;
+
+@function black($opacity){
+    @return rgba(0,0,0,$opacity);
+}
+
+@function white($opacity){
+    @return rgba(255,255,255,$opacity);
+}
+
+$title-font: "Montserrat", sans-serif;
+
+h1, h2, h3, h4, h5, h6 { font-family: $title-font; }
+
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+
+@mixin prefixer($name, $argument) {
+    #{$name}: $argument;
+    -webkit-#{$name}: $argument;
+    -moz-#{$name}: $argument;
+    -ms-#{$name}: $argument;
+    -o-#{$name}: $argument;
+}
+
+@mixin keyframes($name) {
+  @-moz-keyframes #{$name} { @content; }
+  @-webkit-keyframes #{$name} { @content; }
+  @-o-keyframes #{$name} { @content; }
+  @-ms-keyframes #{$name} { @content; }
+  @keyframes #{$name} { @content; }
+}
+
+//===========================================================================
+//    Actual code
+//===========================================================================
+
+#lower-third {
+    margin: 100px auto;
+    width: 1200px;
+    font-family: $title-font;
+    text-transform: uppercase;
+    .section-1 {
+        .current,.name {
+            padding: 4px;
+            background-color: $asbestos;
+            font-family: $title-font;
+            font-size: 14px;
+            line-height: 1;
+            color: $whitesmoke;
+        }
+    }
+
+    .section-2 {
+        overflow: hidden;
+        border-top: 3px solid $asbestos;
+        color: $whitesmoke;
+        .headline {
+            margin: 0;
+            padding: 8px;
+            height: 80px;
+            width: 100%;
+            background: $black;
+            font-size: 28px;
+            line-height: 31px;
+        }
+        .information {
+            background: $black;
+            border-left: 1px solid white(.1);
+            text-align: center;
+            .clock, .temperature {
+                height: 40px;
+                line-height: 40px;
+                font-size: 18px;
+                font-weight: 700;
+            }
+            .clock {
+                border-right: 1px solid white(.1);
+            }
+            .logo {
+                overflow: hidden;
+                height: 40px;
+                border-top: 1px solid white(.1);
+                line-height: 40px;
+                font-weight: 700;
+                font-style: italic;
+                span {
+                    width: 100%;
+                    @include prefixer(animation, logo 20s linear infinite);
+                }
+            }
+        }
+    }
+
+    .section-3 {
+        background: $black;
+        color: $silver;
+        border-top: 1px solid white(.1);
+        font-weight: 700;
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            padding: 3px 6px;
+            border-left: 6px solid $asbestos;
+        }
+    }
+}
+
+@include keyframes(logo) {
+    0% {
+        left: 240px;
+        font-size: 62px;
+        text-shadow: none;
+        opacity: 0;
+    }
+
+    5% { opacity: 1; }
+
+    50% {
+        left: -535px; // Higher negative value depending on how long the animated name is
+        font-size: 62px;
+        opacity: 1;
+    }
+
+    51% { opacity: 0; }
+
+    57% {
+        left: 0;
+        font-size: 29px;
+        text-shadow: none;
+        opacity: 0;
+    }
+
+    62% {
+        opacity: 1;
+        text-shadow: 0 0 10px $silver;
+    }
+
+    95% { opacity: 1; }
+
+    100% {
+        opacity: 0;
+        font-size: 29px;
+        text-shadow: none;
+    }
+}

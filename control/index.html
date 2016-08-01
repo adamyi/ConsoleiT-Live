@@ -1,0 +1,234 @@
+<html>
+<head>
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container" style="display: flex; flex-flow: column;">
+    <div class="row">
+  <div class="col-sm-3">
+    Conference Name: <input type="text" id="conference"><br>
+    Committee Name: <input type="text" id="committee"><br>
+    Current Speaker: <input type="text" id="speaker"><br>
+    Current Topic: <input type="text" id="topic"><br>
+    Text 1: <input type="text" id="t1"><br>
+    Text 2: <input type="text" id="t2"><br>
+    Text 3: <input type="text" id="t3"><br>
+    Text 4: <input type="text" id="t4"><br>
+    Timer 1: <span id="timer1"></span><br>
+    Timer 2: <span id="timer2"></span><br>
+    Timer 1 ON: <input type="checkbox" id="t1on" checked><br>
+    Timer 2 ON: <input type="checkbox" id="t2on" checked><br>
+    Timer 1 RESET: <input type="checkbox" id="t1reset" checked><br>
+    Timer 2 RESET: <input type="checkbox" id="t2reset"><br>
+    Timer 1 Default: <input type="text" id="t1default"><br>
+    Timer 2 Default: <input type="text" id="t2default"><br>
+    <button id="updateData">Update</button>
+    <button id="startTimer">Start</button>
+    <button id="pauseTimer">Pause</button>
+    <button id="resetTimer">Reset</button>
+  </div>
+  <div class="col-sm-3">
+    Nations|Present Status<br>
+    <textarea rows="20" cols="20" id="nations" style="text-align: right;"></textarea>
+    <textarea rows="20" cols="1" id="present"></textarea>
+    <button id="updateNations">Update</button>
+  </div>
+  <div class="col-sm-3">
+    Speakers' List<br>
+    <textarea rows="20" cols="20" id="speakList"></textarea><br>
+    <button id="nextSpeaker">Next</button>
+  </div>
+  <div class="col-sm-3">
+    Send Overlay Text<br>
+    <textarea rows="8" cols="20" id="overlayText"></textarea><br>
+    <button id="showOverlay">show</button><button id="dismissOverlay">dismiss</button>
+  </div>
+</div>
+<div class="row">
+  Temporary Notes:<br>
+  <textarea width=100% rows="6"></textarea>
+</div>
+</div>
+</body>
+<script>
+  var ipc = require('electron').ipcRenderer;
+  ipc.on('timer1Update', function (event, arg) {
+    document.getElementById('timer1').innerHTML = arg;
+  })
+  ipc.on('timer2Update', function (event, arg) {
+    document.getElementById('timer2').innerHTML = arg;
+  })
+  function updateData()
+  {
+    updateMT();
+    ipc.send('setT1', document.getElementById('t1').value);
+    ipc.send('setT2', document.getElementById('t2').value);
+    ipc.send('setT3', document.getElementById('t3').value);
+    ipc.send('setT4', document.getElementById('t4').value);
+    ipc.send('setConference', document.getElementById('conference').value);
+    ipc.send('setCommittee', document.getElementById('committee').value);
+    updateTimer();
+  }
+  function updateMT()
+  {
+    var mT = document.getElementById('speaker').value;
+    if (mT != "")
+      mT += "<br>";
+    mT += document.getElementById('topic').value;
+    ipc.send('setText', mT);
+  }
+  function updateOverlay()
+  {
+    ipc.send('setOverlay', document.getElementById('overlayText').value);
+  }
+  function showOverlay()
+  {
+    ipc.send('showOverlay', true);
+  }
+  function dismissOverlay()
+  {
+    ipc.send('showOverlay', false);
+  }
+  function startTimer()
+  {
+    ipc.send('countSS1', document.getElementById('t1on').checked);
+    ipc.send('countSS2', document.getElementById('t2on').checked);
+  }
+  function pauseTimer()
+  {
+    ipc.send('countSS1', false);
+    ipc.send('countSS2', false);
+  }
+  function resetTimer()
+  {
+    ipc.send('setTimer1', document.getElementById('t1default').value);
+    ipc.send('setTimer2', document.getElementById('t2default').value);
+  }
+  function updateT1(str)
+  {
+    document.getElementById('t1').value = str;
+    ipc.send('setT1', document.getElementById('t1').value);
+  }
+  function updateT2(str)
+  {
+    document.getElementById('t2').value = str;
+    ipc.send('setT2', document.getElementById('t2').value);
+  }
+  function updateT3(str)
+  {
+    document.getElementById('t3').value = str;
+    ipc.send('setT3', document.getElementById('t3').value);
+  }
+  function updateT4(str)
+  {
+    document.getElementById('t4').value = str;
+    ipc.send('setT4', document.getElementById('t4').value);
+  }
+  function updateNations()
+  {
+    var nationL = document.getElementById('nations').value.split("\n");
+    var presentL = document.getElementById('present').value.split("\n");
+    var presentN = 0, absentN = 0;
+    for (var i = 0 ; i < presentL.length ; i++)
+    {
+      if (presentL[i]=="p")
+        presentN++;
+      else {
+        absentN++;
+      }
+    }
+    if ((presentN + absentN) != nationL.length)
+    {
+      alert("ERROR!");
+    } else {
+      var half = parseInt(presentN / 2 + 1);
+      var twothird = parseInt(presentN * 2 / 3);
+      //var twenty = parseInt(presentN / 5 + 1);
+      updateT2(`Present Delegates: ${presentN}`);
+      updateT3(`Simple Majority: ${half}`);
+      updateT4(`Two-Thirds Majority: ${twothird}`);
+    }
+  }
+  function updateOverlayPresent()
+  {
+    var nationL = document.getElementById('nations').value.split("\n");
+    var presentL = document.getElementById('present').value.split("\n");
+    var msg = "";
+    for (var i = 0 ; i < min(presentL.length, nationL.length) ; i++)
+    {
+      msg += nationL[i];
+      if (presentL[i] == "p")
+        msg += " is present\n";
+      else if (presentL[i] == "a")
+        msg += " is absent\n";
+      else
+        msg += "\n";
+    }
+    for (var i = min(presentL.length, nationL.length) ; i < nationL.length ; i++)
+    {
+      msg += nationL[i] + "\n";
+    }
+    ipc.send('setOverlay', msg);
+  }
+  function updateOverlaySpeaker()
+  {
+    ipc.send('setOverlay', "Speakers' List\n" + document.getElementById('speakList').value);
+  }
+  function nextSpeaker()
+  {
+    var speakers = document.getElementById('speakList').value.split("\n");
+    if (speakers.length == 0)
+    {
+      alert("ERROR!");
+    }
+    else {
+      document.getElementById('speaker').value = speakers.shift();
+      updateMT();
+      if (speakers.length == 0)
+      {
+        updateT1('No Next Speaker');
+        document.getElementById('speakList').value = "";
+      }
+      else {
+        updateT1(`Next Speaker: ${speakers[0]}`);
+        document.getElementById('speakList').value = speakers.join("\n");
+      }
+    }
+    pauseTimer();
+    if (document.getElementById('t1reset').checked)
+    {
+      ipc.send('setTimer1', document.getElementById('t1default').value);
+    }
+    if (document.getElementById('t2reset').checked)
+    {
+      ipc.send('setTimer2', document.getElementById('t2default').value);
+    }
+  }
+  var updateButton = document.getElementById('updateData');
+  var nationsButton = document.getElementById('updateNations');
+  var nextButton = document.getElementById('nextSpeaker');
+  var startButton = document.getElementById('startTimer');
+  var pauseButton = document.getElementById('pauseTimer');
+  var resetButton = document.getElementById('resetTimer');
+  var overlayTextArea = document.getElementById('overlayText');
+  var presentTextArea = document.getElementById('present');
+  var speakerTextArea = document.getElementById('speakList');
+  var showButton = document.getElementById('showOverlay');
+  var dismissButton = document.getElementById('dismissOverlay');
+  updateButton.addEventListener('click', updateData);
+  nationsButton.addEventListener('click', updateNations);
+  nextButton.addEventListener('click', nextSpeaker);
+  startButton.addEventListener('click', startTimer);
+  pauseButton.addEventListener('click', pauseTimer);
+  resetButton.addEventListener('click', resetTimer);
+  overlayTextArea.addEventListener('keyup', updateOverlay);
+  presentTextArea.addEventListener('keyup', updateOverlayPresent);
+  speakerTextArea.addEventListener('keyup', updateOverlaySpeaker);
+  showButton.addEventListener('click', showOverlay);
+  dismissButton.addEventListener('click', dismissOverlay);
+  alert("Console iT Live Alpha Version, powered by Adam Yi");
+
+</script>
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</html>

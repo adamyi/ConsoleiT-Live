@@ -1,0 +1,488 @@
+<!--html>
+	<head>
+		<meta charset="UTF-8">
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .show-grid [class ^="row"] {
+            /*padding-top: 10px;
+            padding-bottom: 10px;*/
+            background-color: #eee;
+            border: 1px solid #ddd;
+            background-color: rgba(86, 61, 124, .15);
+            border: 1px solid rgba(86, 61, 124, .2);
+        }
+        </style>
+		    <script>
+				  var ipc = require('electron').ipcRenderer
+					ipc.on('setText', function (event, arg) {
+					  const message = `<h3><p align="center">${arg}</p></h3>`
+					  document.getElementById('mainText').innerHTML = message
+					})
+		    </script>
+	</head>
+	<body style="height:100%; margin:0;">
+		<div class="container" style="display: flex; flex-flow: column;">
+			<div class="row show-grid">
+				<div class="col-lg-9">
+					<div class="clearfix" style="margin-bottom: 10px;"></div>
+					<div class="row" style="flex: 0 1 auto">
+						<div style='float:left'>Conference Name, Committee Name</div>
+						<div style='float:right'>Topic</div>
+					</div>
+					<div class="clearfix" style="margin-bottom: 10px;"></div>
+					<div class="row" style="flex: 1 1 auto" id="mainText">
+						<h3><p align="center">Main Screen Text</p></h3>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<div class="clearfix" style="margin-bottom: 10px;"></div>
+                                        <div class="row">
+						<p align="center">Time</p>
+                                        </div>
+					<div class="row">
+						Present Status
+					</div>
+					<div class="clearfix" style="margin-bottom: 10px;"></div>
+					<div class="row">
+						Other Information
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/jquery-2.2.4.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+	</body>
+</html-->
+<html>
+<head>
+	<link rel="stylesheet" href="../css/pure-min.css">
+	<style class="cp-pen-styles">
+
+	.overlay{
+  position: relative;
+  top: 0;
+  left: 0;
+	margin-top: -350px;
+  /*width: 100%;
+  height: 100%;*/
+  z-index: 10;
+}
+
+.overlayText{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  background-color: rgba(0,0,0,0.5); /*暗淡的背景*/
+}
+
+.modal {
+    width: 500px;
+    height: 350px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -175px;
+    margin-left: -250px;
+    background-color: #0080ff;
+    border-radius: 5px;
+    text-align: center;
+		color: #FFFFFF;
+		font-size: 20px;
+		display: none;
+		opacity: 0.75;
+    z-index: 11; /* 1px higher than the overlay layer */
+}
+	/*===========================================================================
+    stylesheet by:
+    Leon Taveras (LeonimuZ) || http://about.me/lnz
+===========================================================================*/
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+#lower-third {
+  margin: 100px auto;
+  width: 1200px;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+}
+#lower-third .section-1 .current, #lower-third .section-1 .name {
+  padding: 4px;
+  background-color: #7f8c8d;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  color: #f0f0f0;
+}
+#lower-third .section-2 {
+  overflow: hidden;
+  border-top: 3px solid #7f8c8d;
+  color: #f0f0f0;
+}
+#lower-third .section-2 .headline {
+  margin: 0;
+  padding: 8px;
+  height: 80px;
+  width: 100%;
+  background: #111111;
+  font-size: 28px;
+  line-height: 31px;
+}
+#lower-third .section-2 .information {
+  background: #111111;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+#lower-third .section-2 .information .clock, #lower-third .section-2 .information .temperature {
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  font-weight: 700;
+}
+#lower-third .section-2 .information .clock {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+#lower-third .section-2 .information .logo {
+  overflow: hidden;
+  height: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  line-height: 40px;
+  font-weight: 700;
+  font-style: italic;
+}
+#lower-third .section-2 .information .logo span {
+  width: 100%;
+  animation: logo 20s linear infinite;
+  -webkit-animation: logo 20s linear infinite;
+  -moz-animation: logo 20s linear infinite;
+  -ms-animation: logo 20s linear infinite;
+  -o-animation: logo 20s linear infinite;
+}
+#lower-third .section-3 {
+  background: #111111;
+  color: #bdc3c7;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+}
+#lower-third .section-3 ul {
+  margin: 0;
+  padding: 0;
+}
+#lower-third .section-3 li {
+  padding: 3px 6px;
+  border-left: 6px solid #7f8c8d;
+}
+
+@-moz-keyframes logo {
+  0% {
+    left: 240px;
+    font-size: 62px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    left: -535px;
+    font-size: 62px;
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  57% {
+    left: 0;
+    font-size: 29px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    text-shadow: 0 0 10px #bdc3c7;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    font-size: 29px;
+    text-shadow: none;
+  }
+}
+@-webkit-keyframes logo {
+  0% {
+    left: 240px;
+    font-size: 62px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    left: -535px;
+    font-size: 62px;
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  57% {
+    left: 0;
+    font-size: 29px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    text-shadow: 0 0 10px #bdc3c7;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    font-size: 29px;
+    text-shadow: none;
+  }
+}
+@-o-keyframes logo {
+  0% {
+    left: 240px;
+    font-size: 62px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    left: -535px;
+    font-size: 62px;
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  57% {
+    left: 0;
+    font-size: 29px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    text-shadow: 0 0 10px #bdc3c7;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    font-size: 29px;
+    text-shadow: none;
+  }
+}
+@-ms-keyframes logo {
+  0% {
+    left: 240px;
+    font-size: 62px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    left: -535px;
+    font-size: 62px;
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  57% {
+    left: 0;
+    font-size: 29px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    text-shadow: 0 0 10px #bdc3c7;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    font-size: 29px;
+    text-shadow: none;
+  }
+}
+@keyframes logo {
+  0% {
+    left: 240px;
+    font-size: 62px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    left: -535px;
+    font-size: 62px;
+    opacity: 1;
+  }
+  51% {
+    opacity: 0;
+  }
+  57% {
+    left: 0;
+    font-size: 29px;
+    text-shadow: none;
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+    text-shadow: 0 0 10px #bdc3c7;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    font-size: 29px;
+    text-shadow: none;
+  }
+}
+</style>
+	<script src="../js/jquery-2.2.4.min.js"></script>
+	<script src="../js/camera.js"></script>
+	<script>
+		var ipc = require('electron').ipcRenderer
+		ipc.on('setText', function (event, arg) {
+			//const message = `<h3><p align="center">${arg}</p></h3>`
+			document.getElementById('mainText').innerHTML = arg
+		})
+		ipc.on('setT1', function\ (event, arg) {
+			document.getElementById('st1').innerHTML = arg
+		})
+		ipc.on('setT2', function (event, arg) {
+			document.getElementById('st2').innerHTML = arg
+		})
+		ipc.on('setT3', function (event, arg) {
+			document.getElementById('st3').innerHTML = arg
+		})
+		ipc.on('setT4', function (event, arg) {
+			document.getElementById('st4').innerHTML = arg
+		})
+		ipc.on('setConference', function (event, arg) {
+			document.getElementById('conference').innerHTML = arg
+		})
+		ipc.on('setCommittee', function (event, arg) {
+			document.getElementById('committee').innerHTML = arg
+		})
+	</script>
+</head>
+<body>
+	<div id="container" width=100% height=100%>
+	<video id="camera" width=100% autoplay> </video>
+	<!--div class="overlaytext">LALALA</div-->
+	<div class="modal" id="overlayModal">
+		<table>
+			<tr>
+				<td style="horizontal-align:middle;vertical-align:middle;height:350px;color: #FFFFFF;font-size: 20px;" id="overlayModalText"></td>
+			</tr>
+		</table>
+	</div>
+                <div class="overlay"><div class="chromakey">
+                    <div id="lower-third" class="pure-g">
+
+                        <div class="section-1 pure-u-1">
+                            <div class="pure-g">
+                                <div class="pure-u-1-8 current" id="conference">BJMUNSS2016</div>
+                                <div class="pure-u-1-2"></div>
+                                <div class="pure-u-1-8"></div>
+                                <div class="pure-u-1-4 name text-center ">Console iT Live</div>
+                            </div>
+                        </div>
+
+                        <div class="section-2 pure-u-1">
+                            <div class="pure-g">
+
+                                <div class="pure-u-3-4">
+                                    <h1 class="headline" id="mainText">China<br>Detailed Measures to Ensure Aviation Security</h1>
+                                </div>
+
+                                <div class="pure-u-1-4">
+                                    <div class="pure-g information">
+                                        <div class="pure-u-1-2 clock" id="timer1">00:35</div>
+                                        <div class="pure-u-1-2 clock" id="timer2">09:35</div>
+                                        <div class="pure-u-1 logo"><span id="committee">UNSC</span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="section-3 pure-u-1">
+                            <ul class="pure-g">
+                                <li class="pure-u-1-4" id="st1">Next Speaker: United States</li>
+                                <li class="pure-u-1-4" id="st2">Present Delegates: 20</li>
+                                <li class="pure-u-1-4" id="st3">Simple Majority: 11</li>
+                                <li class="pure-u-1-4" id="st4">Two-Thirds Majority: 14</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+							</div>
+					</div>
+</body>
+<script>
+var ipc = require('electron').ipcRenderer;
+ipc.on('timer1Update', function (event, arg) {
+  document.getElementById('timer1').innerHTML = arg;
+})
+ipc.on('timer2Update', function (event, arg) {
+  document.getElementById('timer2').innerHTML = arg;
+})
+ipc.on('showOverlay', function (event, arg) {
+	if (arg) {
+  	document.getElementById('overlayModal').style.display = 'block';
+	}	else {
+		document.getElementById('overlayModal').style.display = 'none';
+	}
+})
+ipc.on('setOverlay', function (event, arg) {
+  document.getElementById('overlayModalText').innerHTML = arg.replace(/\n/g,'<br/>');
+})
+</script>
+</html>
